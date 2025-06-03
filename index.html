@@ -123,6 +123,33 @@
       color: #1e272e;
       font-size: 18px;
     }
+
+/*     lighting */
+    @keyframes rainbowTwinkle {
+  0%    { color: #ff0000; text-shadow: 0 0 6px #ff0000; }
+  6%    { color: #ff7f00; text-shadow: 0 0 6px #ff7f00; }
+  13%   { color: #ffff00; text-shadow: 0 0 6px #ffff00; }
+  20%   { color: #7fff00; text-shadow: 0 0 6px #7fff00; }
+  27%   { color: #00ff00; text-shadow: 0 0 6px #00ff00; }
+  33%   { color: #00ff7f; text-shadow: 0 0 6px #00ff7f; }
+  40%   { color: #00ffff; text-shadow: 0 0 6px #00ffff; }
+  47%   { color: #007fff; text-shadow: 0 0 6px #007fff; }
+  53%   { color: #0000ff; text-shadow: 0 0 6px #0000ff; }
+  60%   { color: #7f00ff; text-shadow: 0 0 6px #7f00ff; }
+  67%   { color: #bf00ff; text-shadow: 0 0 6px #bf00ff; }
+  73%   { color: #ff00ff; text-shadow: 0 0 6px #ff00ff; }
+  80%   { color: #ff007f; text-shadow: 0 0 6px #ff007f; }
+  87%   { color: #ff003f; text-shadow: 0 0 6px #ff003f; }
+  94%   { color: #ff1493; text-shadow: 0 0 6px #ff1493; }
+  100%  { color: #ff0000; text-shadow: 0 0 6px #ff0000; }
+}
+
+.twinkle {
+  font-weight: 700;
+  text-decoration: none;
+  animation: rainbowTwinkle 3s infinite ease-in-out;
+}
+
   </style>
 </head>
 <body>
@@ -162,7 +189,8 @@
     <button class="btn" onclick="resetAll()">🔄 Reset</button>
 
     <p style="text-align:center; margin-top: 30px; font-size: 14px; color: #888;">
-      © 2025 All rights reserved. Developed by <strong><a href="https://www.instagram.com/stephen_bhu?igsh=MWU3NjF3bHI0YTg4eA==" style="text-decoration: #0fd73a;">Jay</a></strong>.
+      © 2025 All rights reserved. Developed by <strong><a href="https://www.instagram.com/stephen_bhu?igsh=MWU3NjF3bHI0YTg4eA==" class="twinkle">Jay</a></strong>
+.
     </p>
   </div>
 
@@ -192,71 +220,91 @@
       return 0;
     }
 
-    function calculateSgpa(sem) {
-      const ids = sem === 's1'
-        ? ['s1_algebra', 's1_analysis', 's1_diffeq', 's1_stats', 's1_programming', 's1_lab']
-        : ['s2_analysis', 's2_optimization', 's2_ds', 's2_daa', 's2_lab', 's2_swayam'];
+ function calculateSgpa(sem) {
+  const ids = sem === 's1'
+    ? ['s1_algebra', 's1_analysis', 's1_diffeq', 's1_stats', 's1_programming', 's1_lab']
+    : ['s2_analysis', 's2_optimization', 's2_ds', 's2_daa', 's2_lab', 's2_swayam'];
 
-      let totalPoints = 0;
-      let totalCredits = 0;
+  let totalPoints = 0;
+  let totalCredits = 0;
+  let allFilled = true;
 
-      ids.forEach(id => {
-        const val = parseFloat(document.getElementById(id).value);
-        if (!isNaN(val) && val >= 0 && val <= 100) {
-          const points = marksToPoints(val);
-          const credit = credits[id];
-          totalPoints += points * credit;
-          totalCredits += credit;
-        }
-      });
-
-      const resultId = sem === 's1' ? 'sgpa-s1-result' : 'sgpa-s2-result';
-      const resultDiv = document.getElementById(resultId);
-      if (totalCredits > 0) {
-        const sgpa = (totalPoints / totalCredits).toFixed(2);
-        resultDiv.textContent = `SGPA: ${sgpa}`;
-      } else {
-        resultDiv.textContent = 'Please enter valid marks.';
-      }
+  ids.forEach(id => {
+    const input = document.getElementById(id);
+    const val = parseFloat(input.value);
+    if (input.value === '' || isNaN(val) || val < 0 || val > 100) {
+      allFilled = false;
     }
+  });
+
+  const resultId = sem === 's1' ? 'sgpa-s1-result' : 'sgpa-s2-result';
+  const resultDiv = document.getElementById(resultId);
+
+  if (!allFilled) {
+    resultDiv.textContent = '⚠️ Please fill all marks correctly.';
+    return;
+  }
+
+  ids.forEach(id => {
+    const val = parseFloat(document.getElementById(id).value);
+    const points = marksToPoints(val);
+    const credit = credits[id];
+    totalPoints += points * credit;
+    totalCredits += credit;
+  });
+
+  const sgpa = (totalPoints / totalCredits).toFixed(2);
+  resultDiv.textContent = `SGPA: ${sgpa}`;
+}
+
 
     function calculateCgpa() {
-      const allIds = Object.keys(credits);
-      let totalPoints = 0;
-      let totalCredits = 0;
+  const allIds = Object.keys(credits);
+  let totalPoints = 0;
+  let totalCredits = 0;
+  let allFilled = true;
 
-      allIds.forEach(id => {
-        const val = parseFloat(document.getElementById(id).value);
-        if (!isNaN(val) && val >= 0 && val <= 100) {
-          const points = marksToPoints(val);
-          const credit = credits[id];
-          totalPoints += points * credit;
-          totalCredits += credit;
-        }
-      });
-
-      const result = document.getElementById('cgpa-result');
-      if (totalCredits > 0) {
-        const cgpa = (totalPoints / totalCredits).toFixed(2);
-        let message = '';
-
-        if (cgpa >= 9) {
-          message = "Oye hero! Tere jaise topper to syllabus se pehle syllabus khatam kar dete hain! 🎬🔥";
-        } else if (cgpa >= 8) {
-          message = "Mere Einstein! Thoda aur josh mein aaja, gold medal tere liye hai! 🧠🥇";
-        } else if (cgpa >= 7) {
-          message = "Chal theek hai yaar, par agle sem me top karna warna Kohli bhi retire ho jayega! 😜";
-        } else if (cgpa >= 6) {
-          message = "Thoda aur try karo, mehnat ka phal meetha hota hai! 🍯😊";
-        } else {
-          message = "Hey friend, don't lose hope! CGPA is not the endgame — tu next semester dhamaka karega 💥💪";
-        }
-
-        result.textContent = `CGPA: ${cgpa} — ${message}`;
-      } else {
-        result.textContent = 'Please enter valid marks for all courses.';
-      }
+  allIds.forEach(id => {
+    const input = document.getElementById(id);
+    const val = parseFloat(input.value);
+    if (input.value === '' || isNaN(val) || val < 0 || val > 100) {
+      allFilled = false;
     }
+  });
+
+  const result = document.getElementById('cgpa-result');
+  if (!allFilled) {
+    result.textContent = '⚠️ Please fill in all course marks before calculating CGPA.';
+    return;
+  }
+
+  allIds.forEach(id => {
+    const val = parseFloat(document.getElementById(id).value);
+    const points = marksToPoints(val);
+    const credit = credits[id];
+    totalPoints += points * credit;
+    totalCredits += credit;
+  });
+
+  const cgpa = (totalPoints / totalCredits).toFixed(2);
+  let message = '';
+
+  if (cgpa >= 9) {
+    message = "Oye hero! Tere jaise topper to syllabus se pehle syllabus khatam kar dete hain! 🎬🔥";
+  } else if (cgpa >= 8) {
+    message = "Mere Einstein! Thoda aur josh mein aaja, gold medal tere liye hai! 🧠🥇";
+  } else if (cgpa >= 7) {
+    message = "Chal theek hai yaar, par agle sem me top karna warna Kohli ODI se  bhi retire ho jayega! 😜";
+  } else if (cgpa >= 6) {
+    message = "Thoda aur try karo, mehnat ka phal meetha hota hai! 🍯😊";
+  } else {
+    message = "Hey friend, don't lose hope! CGPA is not the endgame — tu next semester dhamaka karega 💥💪";
+  }
+
+  result.innerHTML = `CGPA: <strong>${cgpa}</strong><br><span style="color:#555;">${message}</span>`;
+
+}
+
 
     function resetAll() {
       const inputs = document.querySelectorAll('input[type="number"]');
