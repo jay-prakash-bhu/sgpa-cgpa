@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SGPA & CGPA Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://kashiyatra.in/wp-content/uploads/2024/04/front-birla-temple-1024x1024.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 50px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      max-width: 960px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+    }
+
+    #time-display {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background-color: transparent;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #0fd73a;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 9999;
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 30px;
+    }
+    .instructions {
+      text-align: center;
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #34495e;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-left: 6px solid #00b09b;
+      padding-left: 12px;
+      font-size: 22px;
+    }
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .field {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: 0.3s;
+    }
+    .field:hover {
+      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+    }
+    .field label {
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #2d3436;
+    }
+    .field input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #fff;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #00b09b, #96c93d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    }
+    .result {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 600;
+      color: #1e272e;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div id="time-display"></div>
+
+  <div class="container">
+    <h1>🎓 SGPA & CGPA Calculator</h1>
+    <div class="instructions">Write marks of each course (even if your marks are below 40).</div>
+
+    <h2>Semester 1</h2>
+    <div class="input-group">
+      <div class="field"><label>Algebra (4 credits)</label><input type="number" id="s1_algebra"></div>
+      <div class="field"><label>Analysis-I (4 credits)</label><input type="number" id="s1_analysis"></div>
+      <div class="field"><label>Differential Equations (3 credits)</label><input type="number" id="s1_diffeq"></div>
+      <div class="field"><label>Mathematical Statistics (3 credits)</label><input type="number" id="s1_stats"></div>
+      <div class="field"><label>Programming with C and MATLAB (3 credits)</label><input type="number" id="s1_programming"></div>
+      <div class="field"><label>Lab (3 credits)</label><input type="number" id="s1_lab"></div>
+    </div>
+    <button class="btn" onclick="calculateSgpa('s1')">📘 Calculate SGPA for Semester 1</button>
+    <div id="sgpa-s1-result" class="result"></div>
+
+    <h2>Semester 2</h2>
+    <div class="input-group">
+      <div class="field"><label>Analysis-II (4 credits)</label><input type="number" id="s2_analysis"></div>
+      <div class="field"><label>Optimization Techniques (4 credits)</label><input type="number" id="s2_optimization"></div>
+      <div class="field"><label>Data Structure (4 credits)</label><input type="number" id="s2_ds"></div>
+      <div class="field"><label>Design and Analysis of Algorithm (4 credits)</label><input type="number" id="s2_daa"></div>
+      <div class="field"><label>Lab (3 credits)</label><input type="number" id="s2_lab"></div>
+      <div class="field"><label>SWAYAM Course (2 credits)</label><input type="number" id="s2_swayam"></div>
+    </div>
+    <button class="btn" onclick="calculateSgpa('s2')">📗 Calculate SGPA for Semester 2</button>
+    <div id="sgpa-s2-result" class="result"></div>
+
+    <button class="btn" onclick="calculateCgpa()">🎯 Calculate CGPA</button>
+    <div id="cgpa-result" class="result"></div>
+
+    <button class="btn" onclick="resetAll()">🔄 Reset</button>
+
+    <p style="text-align:center; margin-top: 30px; font-size: 14px; color: #888;">
+      © 2025 All rights reserved. Developed by <strong><a href="https://www.instagram.com/stephen_bhu?igsh=MWU3NjF3bHI0YTg4eA==" style="text-decoration: #0fd73a;">Jay</a></strong>.
+    </p>
+  </div>
+
+  <script>
+    const credits = {
+      s1_algebra: 4,
+      s1_analysis: 4,
+      s1_diffeq: 3,
+      s1_stats: 3,
+      s1_programming: 3,
+      s1_lab: 3,
+      s2_analysis: 4,
+      s2_optimization: 4,
+      s2_ds: 4,
+      s2_daa: 4,
+      s2_lab: 3,
+      s2_swayam: 2
+    };
+
+    function marksToPoints(marks) {
+      if (marks >= 90) return 10;
+      if (marks >= 80) return 9;
+      if (marks >= 70) return 8;
+      if (marks >= 60) return 7;
+      if (marks >= 50) return 6;
+      if (marks >= 40) return 5;
+      return 0;
+    }
+
+    function calculateSgpa(sem) {
+      const ids = sem === 's1'
+        ? ['s1_algebra', 's1_analysis', 's1_diffeq', 's1_stats', 's1_programming', 's1_lab']
+        : ['s2_analysis', 's2_optimization', 's2_ds', 's2_daa', 's2_lab', 's2_swayam'];
+
+      let totalPoints = 0;
+      let totalCredits = 0;
+
+      ids.forEach(id => {
+        const val = parseFloat(document.getElementById(id).value);
+        if (!isNaN(val) && val >= 0 && val <= 100) {
+          const points = marksToPoints(val);
+          const credit = credits[id];
+          totalPoints += points * credit;
+          totalCredits += credit;
+        }
+      });
+
+      const resultId = sem === 's1' ? 'sgpa-s1-result' : 'sgpa-s2-result';
+      const resultDiv = document.getElementById(resultId);
+      if (totalCredits > 0) {
+        const sgpa = (totalPoints / totalCredits).toFixed(2);
+        resultDiv.textContent = `SGPA: ${sgpa}`;
+      } else {
+        resultDiv.textContent = 'Please enter valid marks.';
+      }
+    }
+
+    function calculateCgpa() {
+      const allIds = Object.keys(credits);
+      let totalPoints = 0;
+      let totalCredits = 0;
+
+      allIds.forEach(id => {
+        const val = parseFloat(document.getElementById(id).value);
+        if (!isNaN(val) && val >= 0 && val <= 100) {
+          const points = marksToPoints(val);
+          const credit = credits[id];
+          totalPoints += points * credit;
+          totalCredits += credit;
+        }
+      });
+
+      const result = document.getElementById('cgpa-result');
+      if (totalCredits > 0) {
+        const cgpa = (totalPoints / totalCredits).toFixed(2);
+        let message = '';
+
+        if (cgpa >= 9) {
+          message = "Oye hero! Tere jaise topper to syllabus se pehle syllabus khatam kar dete hain! 🎬🔥";
+        } else if (cgpa >= 8) {
+          message = "Mere Einstein! Thoda aur josh mein aaja, gold medal tere liye hai! 🧠🥇";
+        } else if (cgpa >= 7) {
+          message = "Chal theek hai yaar, par agle sem me top karna warna Kohli bhi retire ho jayega! 😜";
+        } else if (cgpa >= 6) {
+          message = "Thoda aur try karo, mehnat ka phal meetha hota hai! 🍯😊";
+        } else {
+          message = "Hey friend, don't lose hope! CGPA is not the endgame — tu next semester dhamaka karega 💥💪";
+        }
+
+        result.textContent = `CGPA: ${cgpa} — ${message}`;
+      } else {
+        result.textContent = 'Please enter valid marks for all courses.';
+      }
+    }
+
+    function resetAll() {
+      const inputs = document.querySelectorAll('input[type="number"]');
+      inputs.forEach(input => input.value = '');
+      document.getElementById('sgpa-s1-result').textContent = '';
+      document.getElementById('sgpa-s2-result').textContent = '';
+      document.getElementById('cgpa-result').textContent = '';
+    }
+
+    // IST time updater
+    function updateTime() {
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const istOffset = 5.5 * 60 * 60000;
+      const istTime = new Date(utc + istOffset);
+      const timeString = istTime.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      document.getElementById('time-display').textContent = `🕒 Time: ${timeString}`;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+</body>
+</html>
